@@ -45,6 +45,7 @@ class MultiHeadAttention(nn.Module):
         self.q_proj= nn.Linear(d_model,d_model)
         self.k_proj= nn.Linear(d_model,d_model)
         self.v_proj= nn.Linear(d_model,d_model)
+        self.Wo_proj= nn.Linear(d_model, d_model)
 
 
     def forward(self,x, mask=None):
@@ -61,6 +62,21 @@ class MultiHeadAttention(nn.Module):
 
         score= Q @ K.permute(0,1,3,2)
         score= score/(self.head_dim ** 0.5)
+
+        if mask is not None:
+            score= score.masked_fill(mask==0, float("-inf"))
+
+        attn= torch.softmax(score, dim=-1)
+
+        out= attn @ V
+
+        out= out.permute(0,2,1,3).contagious().view(B,S,D)
+
+        out= self.Wo_proj(out)
+
+        return out 
+
+
 
 
 
