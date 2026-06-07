@@ -22,7 +22,7 @@ class SelfAttention(nn.Module):
         scores= (scores)/self.scale
 
         if mask is not None:
-            scores= scores.masked_fill(mask==0, float("-inf"))
+            scores= scores.masked_fill(mask==1, float("-inf"))
 
         attn= torch.softmax(scores, dim=-1)
 
@@ -64,7 +64,7 @@ class MultiHeadAttention(nn.Module):
         score= score/(self.head_dim ** 0.5)
 
         if mask is not None:
-            score= score.masked_fill(mask==0, float("-inf"))
+            score= score.masked_fill(mask==1, float("-inf"))
 
         attn= torch.softmax(score, dim=-1)
 
@@ -113,7 +113,7 @@ class CrossAttention(nn.Module):
         score= score/(self.head_dim ** 0.5)
 
         if mask is not None:
-            score= score.masked_fill(mask==0, float("-inf"))
+            score= score.masked_fill(mask==1, float("-inf"))
 
         attn= torch.softmax(score, dim=-1)
 
