@@ -1,5 +1,6 @@
 import torch.nn as nn
 import torch
+from attention import MultiHeadAttention
 
 
 class LayerNorm(nn.Module):
@@ -32,3 +33,32 @@ class FFN(nn.Module):
     def forward(self,x ):
 
         return self.W2(torch.relu(self.W1(x)))
+    
+
+class encoder_block(nn.Module):
+
+    def __init__(self, d_model, num_heads, d_ff, eps=1e-5):
+        super().__init__()
+
+        self.ffn1= FFN(d_model,d_ff)
+        self.ln1= LayerNorm(d_model,eps=1e-5)
+        self.ln2= LayerNorm(d_model,eps=1e-5)
+        self.MHA= MultiHeadAttention(d_model, num_heads)
+
+    def forward(self, src):
+
+        z= self.MHA(src, mask=None)
+        residual1= z + src
+
+        ln1= self.ln1(residual1)
+        ffn1= self.ffn1.forward(ln1)
+
+        residual2= ffn1 + residual1
+        ln2= self.ln2.forward(residual2)
+
+        return ln2
+    
+
+    
+
+
