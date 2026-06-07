@@ -70,11 +70,68 @@ class MultiHeadAttention(nn.Module):
 
         out= attn @ V
 
-        out= out.permute(0,2,1,3).contagious().view(B,S,D)
+        out= out.permute(0,2,1,3).contiguous().view(B,S,D)
 
         out= self.Wo_proj(out)
 
         return out 
+    
+
+class CrossAttention(nn.Module):
+
+    def __init__(self, d_model, head ):
+        super().__init__()
+
+
+        assert d_model % head == 0
+        
+        self.head= head
+
+        self.head_dim= d_model // head
+
+        self.q_proj= nn.Linear(d_model,d_model)
+        self.k_proj= nn.Linear(d_model,d_model)
+        self.v_proj= nn.Linear(d_model,d_model)
+        self.Wo_proj= nn.Linear(d_model, d_model)
+
+    
+    def forward(self,q,k,v,mask=None):
+
+        Bq,Sq,Dq= q.shape
+        Bk,Sk,Dk= k.shape
+        Bv,Sv,Dv= v.shape
+
+        Q= self.q_proj(q)
+        K= self.k_proj(k)
+        V= self.v_proj(v)
+
+        Q= Q.view(Bq,Sq,self.head, self.head_dim).permute(0,2,1,3)
+        K= K.view(Bk,Sk,self.head, self.head_dim).permute(0,2,1,3)
+        V= V.view(Bv,Sv,self.head, self.head_dim).permute(0,2,1,3)
+
+        score= Q @ K.permute(0,1,3,2)
+        score= score/(self.head_dim ** 0.5)
+
+        if mask is not None:
+            score= score.masked_fill(mask==0, float("-inf"))
+
+        attn= torch.softmax(score, dim=-1)
+
+        out= attn @ V
+
+        out= out.permute(0,2,1,3).contiguous().view(Bq,Sq,Dq)
+
+        out= self.Wo_proj(out)
+
+        return out 
+    
+        
+
+
+
+
+
+
 
 
 
