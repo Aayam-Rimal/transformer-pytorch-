@@ -80,7 +80,7 @@ class decoder_block(nn.Module):
 
         attn_out= self.self_attn(trgt, mask=mask)
 
-        residual1= score + trgt
+        residual1= attn_out + trgt
         ln1= self.ln1(residual1)
 
         out= self.cross_attn(q=ln1, k=enc_out, v=enc_out)
