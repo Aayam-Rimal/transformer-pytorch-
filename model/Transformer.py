@@ -7,7 +7,7 @@ class encoder_stack(nn.Module):
     def __init__(self, layers):
         super().__init__()
 
-        self.layers= layers
+        self.layers= nn.ModuleList(layers)
 
     
     def forward(self,x):
@@ -23,7 +23,7 @@ class decoder_stack(nn.Module):
     def __init__(self, layers):
         super().__init__()
 
-        self.layers= layers
+        self.layers= nn.ModuleList(layers)
 
     
     def forward(self,x, enc_out):
@@ -36,4 +36,16 @@ class decoder_stack(nn.Module):
 
 class Transformer(nn.Module):
     
+    def __init__(self, encoder, decoder):
+        super().__init__()
+
+        self.encoder= encoder
+        self.decoder= decoder 
+
+    def forward(self,src,trgt):
+
+        enc_out= self.encoder(src)
+        dec_out= self.decoder(trgt,enc_out)
+
+        return dec_out
     
