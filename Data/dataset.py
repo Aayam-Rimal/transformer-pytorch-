@@ -26,7 +26,7 @@ class Dataset:
         tgt_input_id= [self.tgt_vocab["<bos>"]] +  tgt_id
         tgt_output_id= tgt_id + [self.tgt_vocab["<eos>"]]
 
-        return {"src": src_id, "tgt_input": tgt_input_id, "tgt_output": tgt_output_id}
+        return src_id,tgt_input_id,tgt_output_id
     
 
 
@@ -34,7 +34,9 @@ class Dataset:
 if __name__=="__main__":
 
     data_pair = [
-    ("Hello world", "Ciao mondo")
+    ("hello world", "ciao mondo"),
+    ("how are you", "come stai"),
+    ("i love machine learning", "amo il machine learning")
     ]
 
     with open("src_vocab.json","r") as f:
@@ -45,7 +47,7 @@ if __name__=="__main__":
 
     dataset= Dataset(data_pair, "src_vocab.json", "tgt_vocab.json", src_vocab, tgt_vocab)
 
-    print(dataset[0])
+    print(dataset[1])
     
 
 
