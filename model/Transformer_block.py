@@ -1,6 +1,6 @@
 import torch.nn as nn
 import torch
-from attention import MultiHeadAttention,CrossAttention
+from .attention import MultiHeadAttention,CrossAttention
 
 
 class LayerNorm(nn.Module):
