@@ -1,6 +1,7 @@
 import torch.nn as nn
 import torch
 from .Transformer_block import encoder_block,decoder_block
+from .Encoding import PositionalEncoding
 
 class encoder_stack(nn.Module):
 
@@ -42,6 +43,9 @@ class Transformer(nn.Module):
         self.src_embedding= nn.Embedding(src_vocab_size,embed_dim)
         self.tgt_embedding= nn.Embedding(tgt_vocab_size,embed_dim)
 
+        self.src_pos= PositionalEncoding(embed_dim)
+        self.tgt_pos= PositionalEncoding(embed_dim)
+
         self.fc_out= nn.Linear(embed_dim, tgt_vocab_size)
 
         self.encoder= encoder
@@ -50,7 +54,10 @@ class Transformer(nn.Module):
     def forward(self,src,trgt):
 
         src= self.src_embedding(src)
+        src= self.src_pos(src)
+
         trgt= self.tgt_embedding(trgt)
+        trgt= self.tgt_pos(trgt)
 
         enc_out= self.encoder(src)
         dec_out= self.decoder(trgt,enc_out)
