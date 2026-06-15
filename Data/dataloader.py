@@ -1,5 +1,5 @@
 from torch.utils.data import DataLoader
-from dataset import Dataset
+from .dataset import Dataset
 import torch
 import json
 
