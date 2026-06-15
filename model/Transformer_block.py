@@ -74,9 +74,12 @@ class decoder_block(nn.Module):
 
     def forward(self, trgt, enc_out):
 
-        B,S,D= trgt.shape
+        B,S,D= trgt.shape       
 
-        mask= torch.triu(torch.ones((S,S)), diagonal=1).bool()
+        mask = torch.triu(
+               torch.ones((S, S), device=trgt.device, dtype=torch.bool),
+               diagonal=1
+               )
 
         attn_out= self.self_attn(trgt, mask=mask)
 
