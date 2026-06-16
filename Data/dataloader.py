@@ -7,9 +7,13 @@ def pad_sequence(seq,max_len,pad_value=0):
 
     return seq + [pad_value] * (max_len- len(seq))
 
-def collate(batch):
+def collate(batch, max_len=512):
 
     src,tgt_inp,tgt_out= zip(*batch)
+
+    src = [x[:max_len] for x in src]
+    tgt_inp = [x[:max_len] for x in tgt_inp]
+    tgt_out = [x[:max_len] for x in tgt_out]
 
     src_max= max(len(x) for x in src )
     tgt_max= max(len(x) for x in tgt_inp)
