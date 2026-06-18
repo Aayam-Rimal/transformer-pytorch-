@@ -23,9 +23,9 @@ def collate(batch, max_len=512):
     tgt_out = [pad_sequence(x,tgt_max) for x in tgt_out]
 
     return {
-        "src": torch.tensor(src),
-        "tgt_in": torch.tensor(tgt_inp),
-        "tgt_out": torch.tensor(tgt_out)
+        "src": torch.tensor(src, dtype=torch.long),
+        "tgt_in": torch.tensor(tgt_inp, dtype=torch.long),
+        "tgt_out": torch.tensor(tgt_out, dtype=torch.long)
     }
 
 data_pair = [
