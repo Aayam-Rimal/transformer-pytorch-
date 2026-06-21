@@ -28,30 +28,32 @@ def collate(batch, max_len=512):
         "tgt_out": torch.tensor(tgt_out, dtype=torch.long)
     }
 
-data_pair = [
-    ("hello world", "ciao mondo"),
-    ("how are you", "come stai"),
-    ("i love machine learning", "amo il machine learning")
-]
 
-with open("src_vocab.json","r") as f:
-       src_vocab = json.load(f)
+if __name__=="__main__":
+    data_pair = [
+        ("hello world", "ciao mondo"),
+        ("how are you", "come stai"),
+        ("i love machine learning", "amo il machine learning")
+    ]
 
-with open("tgt_vocab.json","r") as f:
-       tgt_vocab = json.load(f)
+    with open("src_vocab.json","r") as f:
+        src_vocab = json.load(f)
+
+    with open("tgt_vocab.json","r") as f:
+        tgt_vocab = json.load(f)
 
 
-dataset= Dataset(data_pair, src_vocab_path="src_vocab.json", tgt_vocab_path="tgt_vocab.json",src_vocab=src_vocab,tgt_vocab=tgt_vocab )
+    dataset= Dataset(data_pair, src_vocab_path="src_vocab.json", tgt_vocab_path="tgt_vocab.json",src_vocab=src_vocab,tgt_vocab=tgt_vocab )
 
 
-train_loader= DataLoader(
-    dataset,
-    batch_size=3,
-    shuffle=True,
-    collate_fn=collate
-)
+    train_loader= DataLoader(
+        dataset,
+        batch_size=3,
+        shuffle=True,
+        collate_fn=collate
+    )
 
-print(next(iter(train_loader)))
+    print(next(iter(train_loader)))
 
 
 
