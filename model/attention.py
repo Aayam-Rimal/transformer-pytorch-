@@ -127,6 +127,15 @@ class CrossAttention(nn.Module):
     
         
 
+if __name__ == "__main__":
+
+    attn= SelfAttention(64)
+
+    x= torch.randn(5,64)
+
+    out= attn(x)
+
+    print(out.shape)
 
 
 
