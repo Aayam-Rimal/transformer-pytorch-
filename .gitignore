@@ -2,3 +2,4 @@ repo_structure.md
 src_vocab.json
 tgt_vocab.json
 __pycache__/
+checkpoint.pt
